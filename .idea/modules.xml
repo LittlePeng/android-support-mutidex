@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/multidex.iml" filepath="$PROJECT_DIR$/multidex.iml" />
+      <module fileurl="file://$PROJECT_DIR$/multidexlib/multidexlib.iml" filepath="$PROJECT_DIR$/multidexlib/multidexlib.iml" />
+    </modules>
+  </component>
+</project>
