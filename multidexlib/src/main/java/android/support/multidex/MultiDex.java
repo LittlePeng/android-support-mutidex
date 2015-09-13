@@ -76,8 +76,41 @@ public final class MultiDex {
 
     private static final boolean IS_VM_MULTIDEX_CAPABLE =
             isVMMultidexCapable(System.getProperty("java.vm.version"));
+    
+    private static int mNeedReload = -1;
 
     private MultiDex() {}
+
+    public static boolean needReload(Context context) {
+        boolean result;
+        if (mNeedReload == 1) {
+            result = true;
+        } else if (mNeedReload == 0) {
+            result = false;
+        } else if (IS_VM_MULTIDEX_CAPABLE) {
+            result = false;
+        } else {
+            try {
+                ApplicationInfo applicationInfo = getApplicationInfo(context);
+                if (applicationInfo == null) {
+                    result = false;
+                } else {
+                    if (MultiDexExtractor.needReload(context, applicationInfo)) {
+                        mNeedReload = 1;
+                        result = true;
+                    } else {
+                        mNeedReload = 0;
+                        result = false;
+                    }
+                }
+            } catch (Exception ex) {
+                Log.e(TAG, "needReload", ex);
+                result = true;
+            }
+        }
+
+        return result;
+    }
 
     /**
      * Patches the application context class loader by appending extra dex files
@@ -178,6 +211,7 @@ public final class MultiDex {
             Log.e(TAG, "Multidex installation failure", e);
             throw new RuntimeException("Multi dex installation failed (" + e.getMessage() + ").");
         }
+        mNeedReload = 0;
         Log.i(TAG, "install done");
     }
 

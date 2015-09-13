@@ -70,6 +70,12 @@ final class MultiDexExtractor {
     /* Keep value away from 0 because it is a too probable time stamp value */
     private static final long NO_VALUE = -1L;
 
+    static boolean needReload(Context context, ApplicationInfo applicationInfo) throws IOException{
+        final File sourceApk = new File(applicationInfo.sourceDir);
+        long currentCrc = getZipCrc(sourceApk);
+        return isModified(context, sourceApk, currentCrc);
+    }
+    
     /**
      * Extracts application secondary dexes into files in the application data
      * directory.
